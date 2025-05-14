@@ -54,7 +54,8 @@ public:
         Point,
         Ring,
         Polygon,
-        MultiPolygon
+        MultiPolygon,
+        JSON
     };
 
     using EnumItem = std::pair<std::string /* name */, int16_t /* value */>;
@@ -117,6 +118,8 @@ public:
     static TypeRef CreateSimple();
 
     static TypeRef CreateString();
+
+    static TypeRef CreateJSON();
 
     static TypeRef CreateString(size_t n);
 

@@ -142,4 +142,7 @@ private:
     std::deque<std::string> append_data_;
 };
 
+class ColumnJSON: public ColumnString {
+
+};
 }

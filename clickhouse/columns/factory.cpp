@@ -127,6 +127,9 @@ static ColumnRef CreateTerminalColumn(const TypeAst& ast) {
     case Type::MultiPolygon:
         return std::make_shared<ColumnMultiPolygon>();
 
+    case Type::JSON:
+        return std::make_shared<ColumnJSON>();
+
     default:
         return nullptr;
     }

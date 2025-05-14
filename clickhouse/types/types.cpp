@@ -51,6 +51,7 @@ const char* Type::TypeName(Type::Code code) {
         case Type::Code::Ring:           return "Ring";
         case Type::Code::Polygon:        return "Polygon";
         case Type::Code::MultiPolygon:   return "MultiPolygon";
+        case Type::Code::JSON:           return "JSON";
     }
 
     return "Unknown type";
@@ -72,6 +73,7 @@ std::string Type::GetName() const {
         case Float32:
         case Float64:
         case String:
+        case JSON:
         case IPv4:
         case IPv6:
         case Date:
@@ -130,6 +132,7 @@ uint64_t Type::GetTypeUniqueId() const {
         case Float32:
         case Float64:
         case String:
+        case JSON:
         case IPv4:
         case IPv6:
         case Date:
@@ -215,6 +218,9 @@ TypeRef Type::CreateNullable(TypeRef nested_type) {
 
 TypeRef Type::CreateString() {
     return TypeRef(new Type(Type::String));
+}
+TypeRef Type::CreateJSON() {
+    return TypeRef(new Type(Type::JSON));
 }
 
 TypeRef Type::CreateString(size_t n) {

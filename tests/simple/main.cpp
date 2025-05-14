@@ -242,7 +242,7 @@ inline void ParamExample(Client& client) {
         Query query("insert into test_client values ({id: UInt64}, {name: String})");
 
         query.SetParam("id", "1").SetParam("name", "NAME");
-        client.Execute(query);       
+        client.Execute(query);
 
         query.SetParam("id", "123").SetParam("name", "FromParam");
         client.Execute(query);
@@ -307,6 +307,44 @@ inline void ParamNullExample(Client& client) {
     });
 
     client.Execute("DROP TEMPORARY TABLE test_client");
+}
+
+inline void JSONExample(Client& client) {
+    try {
+        /// Create a table.
+        client.Execute("CREATE TEMPORARY TABLE IF NOT EXISTS test_json_client (json JSON)");
+
+        /// Insert some values.
+        {
+            Block block;
+
+            {
+                auto json = std::make_shared<ColumnJSON>();
+                json->Append(R"({"a": 123})");
+                json->Append(R"({"a": "b", "c": {"d": "e"}})");
+
+                block.AppendColumn("json", json);
+            }
+
+            client.Insert("test_json_client", block);
+        }
+
+        // Select values inserted in the previous step.
+        client.Select(R"(SELECT toTypeName(json) AS t, json FROM test_json_client)", [](const Block& b) {
+            auto col_t   = b[0]->As<ColumnString>();
+            auto col_json= b[1]->As<ColumnJSON>();
+
+            for (size_t r = 0; r < b.GetRowCount(); ++r) {
+                std::cout << col_t->At(r) << " → " << col_json->At(r) << '\n';
+            }
+        });
+
+        // Delete table.
+        client.Execute("DROP TEMPORARY TABLE test_json_client");
+    }catch (const ServerException& e) {
+        std::cerr << e.what();
+    }
+
 }
 
 inline void NullableExample(Client& client) {
@@ -566,6 +604,7 @@ static void RunTests(Client& client) {
     IPExample(client);
     MultiArrayExample(client);
     NullableExample(client);
+    JSONExample(client);
     NumbersExample(client);
     SelectNull(client);
     ShowTables(client);
