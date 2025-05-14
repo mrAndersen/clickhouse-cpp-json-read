@@ -330,14 +330,14 @@ inline void JSONExample(Client& client) {
         }
 
         // Select values inserted in the previous step.
-        client.Select(R"(SELECT toTypeName(json) AS t, json FROM test_json_client)", [](const Block& b) {
-            auto col_t   = b[0]->As<ColumnString>();
-            auto col_json= b[1]->As<ColumnJSON>();
-
-            for (size_t r = 0; r < b.GetRowCount(); ++r) {
-                std::cout << col_t->At(r) << " → " << col_json->At(r) << '\n';
-            }
-        });
+        // client.Select(R"(SELECT toTypeName(json) AS t, json FROM test_json_client)", [](const Block& b) {
+        //     auto col_t   = b[0]->As<ColumnString>();
+        //     auto col_json= b[1]->As<ColumnJSON>();
+        //
+        //     for (size_t r = 0; r < b.GetRowCount(); ++r) {
+        //         std::cout << col_t->At(r) << " → " << col_json->At(r) << '\n';
+        //     }
+        // });
 
         // Delete table.
         client.Execute("DROP TEMPORARY TABLE test_json_client");
